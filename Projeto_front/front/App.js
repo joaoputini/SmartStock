@@ -1,6 +1,6 @@
 import React from "react";
-import LoginScreen from "./src/screens/loginscreens"; 
+import AppNavigator from "./src/navigation/AppNavigator"; // importa o navegador
 
 export default function App() {
-  return <LoginScreen />;
+  return <AppNavigator />; // sempre inicia pela navegação
 }

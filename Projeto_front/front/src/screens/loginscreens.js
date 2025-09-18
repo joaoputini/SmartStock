@@ -3,13 +3,13 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import styles from "../styles/loginstyles.js";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {  // 👈 recebe navigation
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   const handleLogin = () => {
-    console.log("E-mail:", email);
-    console.log("Senha:", senha);
+    // futuramente você pode validar com API/axios aqui
+    navigation.replace("Dashboard"); // 👈 redireciona e substitui a tela
   };
 
   return (
@@ -45,7 +45,6 @@ export default function LoginScreen() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
-      
     </View>
   );
 }
