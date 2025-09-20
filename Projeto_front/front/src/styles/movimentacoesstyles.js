@@ -4,11 +4,11 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#fff", // cor de fundo da tela
+    backgroundColor: "#fff",
   },
   input: {
     height: 40,
-    borderColor: "#777",
+    borderColor: "#a854ecff",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -22,10 +22,15 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    backgroundColor: "#eee",
+    backgroundColor: "#eaddf7ff",
   },
   cell: {
     flex: 1,
     textAlign: "center",
+  },
+  title: {
+    fontSize: 24,  // aumente esse valor para deixar maior
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });

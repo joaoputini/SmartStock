@@ -63,7 +63,30 @@ export default function MovimentacoesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Movimentações diárias</Text>
+      <Text style={styles.title}>Movimentações Diárias</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Filtrar por nome do produto"
+        value={filtro}
+        onChangeText={filtrarProdutos}
+      />
+
+      <View style={[styles.row, styles.header]}>
+        <Text style={[styles.cell, { flex: 2 }]}>Produto</Text>
+        <Text style={styles.cell}>Entrada</Text>
+        <Text style={[styles.cell, { flex: 2 }]}>Funcionário Entrada</Text>
+        <Text style={styles.cell}>Saída</Text>
+        <Text style={[styles.cell, { flex: 2 }]}>Funcionário Saída</Text>
+      </View>
+
+      <FlatList
+        data={produtos}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderProduto}
+      />
+
+      <Text style={styles.title}>Movimentações Mensais</Text>
 
       <TextInput
         style={styles.input}

@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     input: {
     height: 40,
-    borderColor: "#777",
+    borderColor: "#a854ecff",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -17,7 +17,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    backgroundColor: "#eee",
+    backgroundColor: "#eaddf7ff",
   },
   cell: {
     flex: 1,
