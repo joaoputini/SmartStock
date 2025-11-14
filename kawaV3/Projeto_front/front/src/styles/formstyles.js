@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 
+
+//a stylização do botão adicionar
 export default StyleSheet.create({
   modalContainer: {
     flex: 1,

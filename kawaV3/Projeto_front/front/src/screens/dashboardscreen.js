@@ -11,7 +11,6 @@ import styles from "../styles/dashboardstyles";
 import { AuthContext } from "../contexts/AuthContext";
 import api from "../api/api";
 
-// gráfico
 import { LineChart } from "react-native-chart-kit";
 
 const SummaryCard = ({ title, value, color }) => (
@@ -31,7 +30,6 @@ export default function DashboardScreen({ navigation }) {
     alertasAtivos: 0,
   });
 
-  // estados do gráfico
   const [entradasMes, setEntradasMes] = useState(new Array(12).fill(0));
   const [saidasMes, setSaidasMes] = useState(new Array(12).fill(0));
 
@@ -44,7 +42,6 @@ export default function DashboardScreen({ navigation }) {
           api.get("/alertas"),
         ]);
 
-        // --- stats ---
         setStats({
           totalProdutos: produtosRes.data.length,
           totalMovimentacoes: movimentacoesRes.data.length,
@@ -52,19 +49,17 @@ export default function DashboardScreen({ navigation }) {
             .length,
         });
 
-        // --- gráfico: agrupar por mês ---
         const entradas = new Array(12).fill(0);
         const saidas = new Array(12).fill(0);
 
         movimentacoesRes.data.forEach((m) => {
-          const data = new Date(m.dataHora); // campo vindo do backend H2
-          const mes = data.getMonth(); // 0–11
+          const data = new Date(m.dataHora);
+          if (isNaN(data)) return;
 
-          if (m.tipo === "ENTRADA") {
-            entradas[mes] += Number(m.quantidade);
-          } else if (m.tipo === "SAIDA") {
-            saidas[mes] += Number(m.quantidade);
-          }
+          const mes = data.getMonth();
+
+          if (m.tipo === "ENTRADA") entradas[mes] += Number(m.quantidade);
+          if (m.tipo === "SAIDA") saidas[mes] += Number(m.quantidade);
         });
 
         setEntradasMes(entradas);
@@ -80,91 +75,66 @@ export default function DashboardScreen({ navigation }) {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator style={{ flex: 1 }} size="large" />;
+    return <ActivityIndicator style={{ flex: 1 }} size="large" color="#8e44ad" />;
   }
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
 
-      <SummaryCard
-        title="Total de Produtos"
-        value={stats.totalProdutos}
-        color="#9b59b6"
-      />
-      <SummaryCard
-        title="Movimentações"
-        value={stats.totalMovimentacoes}
-        color="#3498db"
-      />
-      <SummaryCard
-        title="Alertas Ativos"
-        value={stats.alertasAtivos}
-        color="#e74c3c"
-      />
+      <SummaryCard title="Total de Produtos" value={stats.totalProdutos} color="#8e44ad" />
+      <SummaryCard title="Movimentações" value={stats.totalMovimentacoes} color="#8e44ad" />
+      <SummaryCard title="Alertas Ativos" value={stats.alertasAtivos} color="#8e44ad" />
 
-      {/* === GRÁFICO === */}
       <View style={styles.stockBox}>
         <Text style={styles.subTitle}>Movimentações por Mês</Text>
 
         <LineChart
           data={{
             labels: [
-              "Jan",
-              "Fev",
-              "Mar",
-              "Abr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Ago",
-              "Set",
-              "Out",
-              "Nov",
-              "Dez",
+              "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+              "Jul", "Ago", "Set", "Out", "Nov", "Dez"
             ],
             datasets: [
               {
                 data: entradasMes,
-                color: (opacity = 1) => `rgba(46, 204, 113, ${opacity})`, // verde
+                color: (opacity = 1) => `rgba(46, 204, 113, ${opacity})`,
                 strokeWidth: 3,
               },
               {
                 data: saidasMes,
-                color: (opacity = 1) => `rgba(231, 76, 60, ${opacity})`, // vermelho
+                color: (opacity = 1) => `rgba(231, 76, 60, ${opacity})`,
                 strokeWidth: 3,
               },
             ],
             legend: ["Entradas", "Saídas"],
           }}
-          width={Dimensions.get("window").width - 40}
+          width={Dimensions.get("window").width - 30}
           height={260}
+          bezier
           chartConfig={{
-            backgroundColor: "#fff",
-            backgroundGradientFrom: "#fff",
-            backgroundGradientTo: "#fff",
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ffffff",
             decimalPlaces: 0,
             color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
             labelColor: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+            propsForDots: {
+              r: "4",
+            },
+            propsForBackgroundLines: {
+              strokeDasharray: "",
+            },
           }}
-          bezier
           style={{
             marginVertical: 20,
-            borderRadius: 10,
+            borderRadius: 15,
           }}
         />
       </View>
 
-      <TouchableOpacity
-        onPress={logout}
-        style={{
-          marginTop: 20,
-          padding: 10,
-          backgroundColor: "red",
-          borderRadius: 5,
-        }}
-      >
-        <Text style={{ color: "white", textAlign: "center" }}>Sair</Text>
+      <TouchableOpacity onPress={logout} style={styles.logoutButton}>
+        <Text style={styles.logoutText}>Sair</Text>
       </TouchableOpacity>
     </ScrollView>
   );
