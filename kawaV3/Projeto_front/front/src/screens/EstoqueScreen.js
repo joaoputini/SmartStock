@@ -36,7 +36,7 @@ const EstoqueScreen = () => {
 
   return (
     <View style={listStyles.container}>
-      <Text style={listStyles.title}>Posição de Estoque</Text>
+      
       
       <View style={listStyles.headerRow}>
         <Text style={[listStyles.headerCell, { flex: 3, textAlign: 'left' }]}>Produto</Text>

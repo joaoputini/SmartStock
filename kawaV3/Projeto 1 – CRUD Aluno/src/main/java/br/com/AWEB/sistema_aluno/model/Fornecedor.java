@@ -1,6 +1,8 @@
 // Local: src/main/java/br/com/AWEB/sistema_aluno/model/Fornecedor.java
 package br.com.AWEB.sistema_aluno.model;
 
+import org.hibernate.validator.constraints.br.CNPJ;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +16,7 @@ public class Fornecedor {
     @Column(nullable = false)
     private String nome;
 
+   // @CNPJ(message =  "CNPJ invalido")
     @Column(unique = true, nullable = false)
     private String cnpj;
 

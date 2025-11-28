@@ -39,7 +39,7 @@ public class UsuarioApiController {
     /**
      * Endpoint para CRIAR um novo usuário.
      * URL: POST /api/v1/usuarios
-     * Corpo da Requisição (JSON):
+     *2 Corpo da Requisição (JSON):
      * {
      * "nome": "Nome do Usuario",
      * "email": "usuario@email.com",

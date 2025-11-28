@@ -51,7 +51,7 @@ export default function MovimentacoesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Histórico de Movimentações</Text>
+    
 
       <TextInput
         style={styles.input}

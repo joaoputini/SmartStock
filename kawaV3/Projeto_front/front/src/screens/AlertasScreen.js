@@ -49,7 +49,7 @@ const AlertasScreen = () => {
       <Text style={[listStyles.cell, getStatusStyle(item.status)]}>{item.status}</Text>
       <View style={listStyles.actionsCell}>
         <TouchableOpacity onPress={() => handleUpdateStatus(item.id, 'VISUALIZADO')}>
-          <MaterialIcons name="visibility" size={24} color="orange" />
+          <MaterialIcons name="visibility" size={24} color="#797070ab" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleUpdateStatus(item.id, 'RESOLVIDO')}>
           <MaterialIcons name="check-circle" size={24} color="green" />
@@ -64,7 +64,7 @@ const AlertasScreen = () => {
 
   return (
     <View style={listStyles.container}>
-      <Text style={listStyles.title}>Alertas do Sistema</Text>
+     
       
       <FlatList
         data={alertas}

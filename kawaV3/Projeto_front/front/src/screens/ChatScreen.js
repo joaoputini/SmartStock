@@ -61,13 +61,13 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f5f5f5' },
     messageBubble: { padding: 15, borderRadius: 20, marginVertical: 5, maxWidth: '80%' },
-    userBubble: { backgroundColor: '#9b59b6', alignSelf: 'flex-end', marginRight: 10 },
+    userBubble: { backgroundColor: '#51007d', alignSelf: 'flex-end', marginRight: 10 },
     botBubble: { backgroundColor: '#ecf0f1', alignSelf: 'flex-start', marginLeft: 10 },
     userText: { color: 'white' },
     botText: { color: 'black' },
     inputContainer: { flexDirection: 'row', padding: 10, borderTopWidth: 1, borderColor: '#ccc', backgroundColor: 'white' },
     input: { flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 20, paddingHorizontal: 15 },
-    sendButton: { marginLeft: 10, justifyContent: 'center', paddingHorizontal: 20, backgroundColor: '#9b59b6', borderRadius: 20 },
+    sendButton: { marginLeft: 10, justifyContent: 'center', paddingHorizontal: 20, backgroundColor: '#51007d', borderRadius: 20 },
     sendButtonText: { color: 'white', fontWeight: 'bold' }
 });
 

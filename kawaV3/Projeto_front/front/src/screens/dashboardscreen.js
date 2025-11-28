@@ -75,16 +75,28 @@ export default function DashboardScreen({ navigation }) {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator style={{ flex: 1 }} size="large" color="#8e44ad" />;
+    return (
+      <ActivityIndicator style={{ flex: 1 }} size="large" color="#8e44ad" />
+    );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Dashboard</Text>
-
-      <SummaryCard title="Total de Produtos" value={stats.totalProdutos} color="#8e44ad" />
-      <SummaryCard title="Movimentações" value={stats.totalMovimentacoes} color="#8e44ad" />
-      <SummaryCard title="Alertas Ativos" value={stats.alertasAtivos} color="#8e44ad" />
+      <SummaryCard
+        title="Total de Produtos"
+        value={stats.totalProdutos}
+        color="#51007d"
+      />
+      <SummaryCard
+        title="Movimentações"
+        value={stats.totalMovimentacoes}
+        color="#51007d"
+      />
+      <SummaryCard
+        title="Alertas Ativos"
+        value={stats.alertasAtivos}
+        color="#51007d"
+      />
 
       <View style={styles.stockBox}>
         <Text style={styles.subTitle}>Movimentações por Mês</Text>
@@ -92,8 +104,18 @@ export default function DashboardScreen({ navigation }) {
         <LineChart
           data={{
             labels: [
-              "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-              "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+              "Jan",
+              "Fev",
+              "Mar",
+              "Abr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Ago",
+              "Set",
+              "Out",
+              "Nov",
+              "Dez",
             ],
             datasets: [
               {
@@ -109,7 +131,7 @@ export default function DashboardScreen({ navigation }) {
             ],
             legend: ["Entradas", "Saídas"],
           }}
-          width={Dimensions.get("window").width - 30}
+          width={Dimensions.get("window").width - 60}
           height={260}
           bezier
           chartConfig={{
@@ -129,12 +151,33 @@ export default function DashboardScreen({ navigation }) {
           style={{
             marginVertical: 20,
             borderRadius: 15,
+            alignSelf: "center",
           }}
         />
       </View>
 
-      <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-        <Text style={styles.logoutText}>Sair</Text>
+      <TouchableOpacity
+        onPress={logout}
+        style={{
+          alignSelf: "flex-end",
+          backgroundColor: "#51007d",
+          paddingVertical: 6,
+          paddingHorizontal: 12,
+          borderRadius: 8,
+          marginTop: 20,
+          marginBottom: 20,
+          marginRight: 20,
+        }}
+      >
+        <Text
+          style={{
+            color: "#fff",
+            fontSize: 14,
+            fontWeight: "600",
+          }}
+        >
+          Sair
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

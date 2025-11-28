@@ -5,6 +5,7 @@ package br.com.AWEB.sistema_aluno.service;
 import br.com.AWEB.sistema_aluno.model.Usuario;
 import br.com.AWEB.sistema_aluno.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Import necessário
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    // Instancia o codificador de senhas (BCrypt)
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
@@ -40,8 +44,9 @@ public class UsuarioService {
         
         // A senha só deve ser atualizada se uma nova for fornecida
         if (usuarioDetails.getSenhaHash() != null && !usuarioDetails.getSenhaHash().isEmpty()) {
-            // Lembre-se de criptografar a senha na vida real!
-            usuario.setSenhaHash(usuarioDetails.getSenhaHash());
+            // IMPLEMENTAÇÃO BCRYPT: Criptografa a nova senha antes de salvar
+            String senhaCriptografada = passwordEncoder.encode(usuarioDetails.getSenhaHash());
+            usuario.setSenhaHash(senhaCriptografada);
         }
         
         return usuarioRepository.save(usuario);
@@ -53,42 +58,40 @@ public class UsuarioService {
         }
         usuarioRepository.deleteById(id);
     }
-/**
+
+    /**
      * Salva um novo usuário.
-     * Em um cenário real, a senha deve ser criptografada ANTES de salvar.
+     * A senha é criptografada automaticamente antes de salvar.
      */
     public Usuario save(Usuario usuario) {
         if (usuario.getId() == null) {
             usuario.setDataCriacao(LocalDateTime.now());
         }
         
-        // !! ALERTA DE SEGURANÇA !!
-        // Em um projeto real, você NUNCA deve salvar a senha em texto puro.
-        // Use uma biblioteca de hashing como BCrypt do Spring Security.
-        // Exemplo: usuario.setSenhaHash(passwordEncoder.encode(usuario.getSenhaHash()));
+        // IMPLEMENTAÇÃO BCRYPT: Verifica se a senha foi informada e criptografa
+        if (usuario.getSenhaHash() != null && !usuario.getSenhaHash().isEmpty()) {
+            String senhaCriptografada = passwordEncoder.encode(usuario.getSenhaHash());
+            usuario.setSenhaHash(senhaCriptografada);
+        }
         
         return usuarioRepository.save(usuario);
     }
 
     /**
      * Autentica um usuário com base no email e senha.
-     * Retorna true se as credenciais forem válidas, caso contrário, false.
+     * Retorna true se as credenciais forem válidas.
      */
-    public boolean autenticarUsuario(String email, String senha) {
+    public boolean autenticarUsuario(String email, String senhaPura) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
 
         // Verifica se o usuário com o email fornecido existe
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
 
-            // !! ALERTA DE SEGURANÇA !!
-            // Esta é uma comparação de texto simples, que só funciona se a senha
-            // NÃO estiver criptografada. Em um cenário real, você usaria um
-            // método para verificar a senha criptografada.
-            // Exemplo: return passwordEncoder.matches(senha, usuario.getSenhaHash());
-            
-            // Compara a senha fornecida com a senha armazenada no banco
-            return senha.equals(usuario.getSenhaHash());
+            // IMPLEMENTAÇÃO BCRYPT: Verifica a senha
+            // O método matches compara a senha "texto puro" (que veio do login)
+            // com o Hash gravado no banco de dados.
+            return passwordEncoder.matches(senhaPura, usuario.getSenhaHash());
         }
 
         // Retorna false se o usuário não for encontrado
@@ -96,7 +99,6 @@ public class UsuarioService {
     }
 
     public Usuario findByNome(String nomeUsuario) {
-        // Altere a chamada para o novo método
         return usuarioRepository.findFirstByNomeContainingIgnoreCase(nomeUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado contendo o termo: " + nomeUsuario));
     }
