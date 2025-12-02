@@ -73,3 +73,6 @@ select * from produto [42102-232]
 2025-10-07 19:21:25.327086-03:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
 select * from produto [42102-232]
+2025-12-02 18:53:49.859021-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "delete [*]* FROM USUARIOS"; expected "identifier"; SQL statement:
+delete * FROM USUARIOS [42001-232]

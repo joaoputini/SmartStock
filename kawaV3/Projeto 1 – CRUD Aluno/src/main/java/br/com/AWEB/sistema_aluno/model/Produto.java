@@ -1,4 +1,3 @@
-// Local: src/main/java/br/com/AWEB/sistema_aluno/model/Produto.java
 package br.com.AWEB.sistema_aluno.model;
 
 import jakarta.persistence.*;
@@ -21,11 +20,11 @@ public class Produto {
     @Column(columnDefinition = "TEXT")
     private String descricao;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) 
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_fornecedor", nullable = false)
     private Fornecedor fornecedor;
 
@@ -35,7 +34,6 @@ public class Produto {
     @Column(name = "unidade_medida")
     private String unidadeMedida;
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
