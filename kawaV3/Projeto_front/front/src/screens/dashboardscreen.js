@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Dimensions,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native"; // IMPORTANTE: Importar useFocusEffect
 import styles from "../styles/dashboardstyles";
 import { AuthContext } from "../contexts/AuthContext";
 import api from "../api/api";
@@ -33,46 +34,58 @@ export default function DashboardScreen({ navigation }) {
   const [entradasMes, setEntradasMes] = useState(new Array(12).fill(0));
   const [saidasMes, setSaidasMes] = useState(new Array(12).fill(0));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [produtosRes, movimentacoesRes, alertasRes] = await Promise.all([
-          api.get("/produtos"),
-          api.get("/movimentacoes"),
-          api.get("/alertas"),
-        ]);
+  // AQUI ESTÁ A CORREÇÃO: Usamos useFocusEffect em vez de useEffect
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true; // Flag para evitar atualização se o componente desmontar
 
-        setStats({
-          totalProdutos: produtosRes.data.length,
-          totalMovimentacoes: movimentacoesRes.data.length,
-          alertasAtivos: alertasRes.data.filter((a) => a.status === "NOVO")
-            .length,
-        });
+      const fetchData = async () => {
+        try {
+          // setLoading(true); // Opcional: descomente se quiser ver o loading toda vez que voltar
+          const [produtosRes, movimentacoesRes, alertasRes] = await Promise.all([
+            api.get("/produtos"),
+            api.get("/movimentacoes"),
+            api.get("/alertas"),
+          ]);
 
-        const entradas = new Array(12).fill(0);
-        const saidas = new Array(12).fill(0);
+          if (isActive) {
+            setStats({
+              totalProdutos: produtosRes.data.length,
+              totalMovimentacoes: movimentacoesRes.data.length,
+              alertasAtivos: alertasRes.data.filter((a) => a.status === "NOVO")
+                .length,
+            });
 
-        movimentacoesRes.data.forEach((m) => {
-          const data = new Date(m.dataHora);
-          if (isNaN(data)) return;
+            const entradas = new Array(12).fill(0);
+            const saidas = new Array(12).fill(0);
 
-          const mes = data.getMonth();
+            movimentacoesRes.data.forEach((m) => {
+              const data = new Date(m.dataHora);
+              if (isNaN(data)) return;
 
-          if (m.tipo === "ENTRADA") entradas[mes] += Number(m.quantidade);
-          if (m.tipo === "SAIDA") saidas[mes] += Number(m.quantidade);
-        });
+              const mes = data.getMonth();
 
-        setEntradasMes(entradas);
-        setSaidasMes(saidas);
-      } catch (error) {
-        console.error("Erro ao carregar dados do dashboard:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+              if (m.tipo === "ENTRADA") entradas[mes] += Number(m.quantidade);
+              if (m.tipo === "SAIDA") saidas[mes] += Number(m.quantidade);
+            });
 
-    fetchData();
-  }, []);
+            setEntradasMes(entradas);
+            setSaidasMes(saidas);
+          }
+        } catch (error) {
+          console.error("Erro ao carregar dados do dashboard:", error);
+        } finally {
+          if (isActive) setLoading(false);
+        }
+      };
+
+      fetchData();
+
+      return () => {
+        isActive = false; // Cleanup
+      };
+    }, []) // useCallback garante que a função não seja recriada desnecessariamente
+  );
 
   if (loading) {
     return (

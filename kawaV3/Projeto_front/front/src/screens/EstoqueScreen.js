@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native'; // Importação necessária para atualização automática
 import api from '../api/api';
 import listStyles from '../styles/listscreenstyles';
 
@@ -7,12 +8,16 @@ const EstoqueScreen = () => {
   const [estoque, setEstoque] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchEstoque();
-  }, []);
+  // Substituímos o useEffect pelo useFocusEffect para recarregar os dados ao focar na tela
+  useFocusEffect(
+    useCallback(() => {
+      fetchEstoque();
+    }, [])
+  );
 
   const fetchEstoque = async () => {
     try {
+      // setLoading(true); // Opcional: descomente se quiser ver o loading a cada navegação
       const response = await api.get('/estoques');
       setEstoque(response.data);
     } catch (error) {
@@ -36,7 +41,6 @@ const EstoqueScreen = () => {
 
   return (
     <View style={listStyles.container}>
-      
       
       <View style={listStyles.headerRow}>
         <Text style={[listStyles.headerCell, { flex: 3, textAlign: 'left' }]}>Produto</Text>
